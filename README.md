@@ -31,7 +31,7 @@ pip install -r requirements.txt
 streamlit run main.py
 
 ```
-### 后续计划 -如果以后还做测试的话
+### 后续计划
 - [ ] 增加测试用例历史数据RAG增强
 - [ ] 增加需求分析及测试用例生成修改反馈
 - [ ] 考虑接口测试用例自动生成（pytest脚本）、UI测试用例自动生成（playwright）
