@@ -19,6 +19,7 @@
 ### 环境要求
 - Python 3.9+
 - 下载嵌入模型nomic-embed-text:latest
+- 申请API Key
 
 ### 依赖包
 ```bash
