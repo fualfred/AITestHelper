@@ -18,8 +18,15 @@
 
 ### 环境要求
 - Python 3.9+
-- 下载嵌入模型nomic-embed-text:latest
+- 下载嵌入模型nomic-embed-text:latest（可以本地部署ollama然后下载）
 - 申请API Key或者本地部署
+- 当前目录需要新建
+  .env文件配置
+TENCENT_API_KEY=
+TENCENT_BASE_URL=
+OLLAMA_BASE_URL=http://127.0.0.1:11434
+DEEPSEEK_BASE_URL=
+DEEPSEEK_API_KEY=
 
 ### 依赖包
 ```bash
