@@ -20,8 +20,7 @@
 - Python 3.9+
 - 下载嵌入模型nomic-embed-text:latest（可以本地部署ollama然后下载）
 - 申请API Key或者本地部署
-- 当前目录需要新建
- - .env文件配置
+- 当前目录需要新建.env文件配置
 ```bash
 
 TENCENT_API_KEY=
