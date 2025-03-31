@@ -16,9 +16,11 @@
 ###### 📚需求分析
 ![分析需求](./md/需求分析.png "需求")
 
+![全新界面](./md/Snipaste_2025-03-31_15-49-31.png "全新界面")
 ### 环境要求
 - Python 3.9+
 - 下载嵌入模型nomic-embed-text:latest（可以本地部署ollama然后下载）
+- ollama部署后 通过命令 ollama pull nomic-embed-text:latest 下载嵌入模型
 - 申请API Key或者本地部署
 - 当前目录需要新建.env文件配置
 ```bash
