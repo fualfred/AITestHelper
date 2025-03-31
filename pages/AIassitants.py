@@ -27,7 +27,7 @@ def dataframe_stream_generator(df, chunk_size=100):
     total = len(df)
 
     # 先输出表头
-    yield df.head(0).to_markdown(index=False) + "\n"
+    # yield df.head(0).to_markdown(index=False) + "\n"
 
     # 分块加载数据
     for i in range(0, total, chunk_size):
