@@ -17,7 +17,7 @@ st.subheader("🤖AI测试助手")
 st.divider()
 
 
-def dataframe_stream_generator(df, chunk_size=100):
+def dataframe_stream_generator(df, chunk_size=10):
     """
     流式生成DataFrame分块
     参数:
