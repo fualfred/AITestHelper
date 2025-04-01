@@ -11,8 +11,6 @@ import pandas as pd
 from utils.logger import get_logger
 
 # 初始化
-
-st.session_state.agent = TestAgent()
 BASE_PATH = st.session_state.base_path
 logger = get_logger()
 st.subheader("🤖AI测试助手")
@@ -41,7 +39,8 @@ def dataframe_stream_generator(df, chunk_size=5):
         yield md_table
         time.sleep(0.1)  # 控制加载速
 
-
+if "agent" not in st.session_state:
+    st.session_state.agent = TestAgent()
 if "firstTimeChat" not in st.session_state:
     st.session_state.firstTimeChat = True
 if "downcases" not in st.session_state:
