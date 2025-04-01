@@ -1,7 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import json
+import re
 import streamlit as st
+import random
 import time
 from myAgent.my_agent import TestAgent
 from utils.parser import file_loader
@@ -17,7 +19,7 @@ st.subheader("🤖AI测试助手")
 st.divider()
 
 
-def dataframe_stream_generator(df, chunk_size=10):
+def dataframe_stream_generator(df, chunk_size=5):
     """
     流式生成DataFrame分块
     参数:
@@ -40,6 +42,8 @@ def dataframe_stream_generator(df, chunk_size=10):
         time.sleep(0.1)  # 控制加载速
 
 
+if "firstTimeChat" not in st.session_state:
+    st.session_state.firstTimeChat = True
 if "downcases" not in st.session_state:
     st.session_state.downcases = pd.DataFrame()
 
@@ -82,8 +86,11 @@ if prompt:
 
     with st.chat_message("assistant"):
         with st.spinner('🤖AI助手正在思考中...', show_time=True):
-            response = st.session_state.agent.gernerate_test_cases(prompt_send)
-
+            if st.session_state.firstTimeChat:
+                response = st.session_state.agent.gernerate_test_cases(prompt_send)
+                st.session_state.firstTimeChat = False
+            else:
+                response = st.session_state.agent.rag_test_cases(prompt_send)
             clean_response = response.replace("json", "").replace("```", "").strip()
             logger.info(f"clean_response:{clean_response}")
             response = json.loads(clean_response)
