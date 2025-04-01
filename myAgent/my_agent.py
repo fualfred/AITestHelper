@@ -14,6 +14,7 @@ from utils.logger import get_logger
 from typing import Optional, Dict
 from langchain_community.chat_message_histories import ChatMessageHistory
 from config.settings import settings
+
 logger = get_logger()
 
 
@@ -44,12 +45,11 @@ class TestAgent:
         self.output_parser = self._output_parser()
         self.agent_executor = self._build_agent_chain()
 
-
     def _init_llm(self, company):
         return get_llm(company)
 
     def _init_memory(self) -> ConversationSummaryMemory:
-        return ConversationSummaryMemory(llm=self.llm, memory_key="chat_memory", chat_memory=ChatMessageHistory())
+        return ConversationSummaryMemory(llm=self.llm, chat_memory=ChatMessageHistory(), return_messages=True)
 
     def _init_retriever(self):
         return create_vector_db().as_retriever(search_kwargs={"k": 2})
@@ -69,13 +69,13 @@ class TestAgent:
     def _build_agent_chain(self):
         prompt = ChatPromptTemplate.from_messages([
             ("system", self._get_system_prompt()),
-            ("placeholder", "{chat_history}"),
+            ("placeholder", "{history}"),
             ("human", "{input}"),
             ("placeholder", "{agent_scratchpad}")
         ])
         agent_chain = {
                           "input": lambda x: x["input"],
-                          "chat_history": lambda x: x.get("chat_history", []),
+                          "history": lambda x: x.get("history", []),
                           "agent_scratchpad": lambda x: x["intermediate_steps"]
                       } | prompt | self.llm | self.output_parser
         return AgentExecutor(
@@ -120,6 +120,23 @@ class TestAgent:
             full_query = f"需求：{query}\n上下文{context or ''}\n知识库：{retriever}"
             logger.info(f"测试用例生成请求：{full_query}")
             response = self.agent_executor.invoke({"input": full_query})
+            logger.info(f"llm返回的数据：{response}")
+            logger.info(f"测试用例生成结果：{response['output']}")
+            return response['output']
+        except Exception as e:
+            logger.error(f"测试用例生成异常：{e}")
+            return {
+                "status": "error",
+                "message": str(e),
+                "suggestion": "请检查输入格式或重试"
+            }
+
+    def rag_test_cases(self, query, context: Optional[str] = None) -> Dict:
+        try:
+            full_query = f"请你根据以下意见进行更新：{query}"
+            logger.info(f"测试用例生成请求：{full_query}")
+            response = self.agent_executor.invoke({"input": full_query})
+            logger.info(f"llm返回的数据：{response}")
             logger.info(f"测试用例生成结果：{response['output']}")
             return response['output']
         except Exception as e:
@@ -133,14 +150,17 @@ class TestAgent:
 
 if __name__ == "__main__":
     pass
+    # pass
     # 测试用例生成
     # agent = TestAgent()
     # # print(agent)
     # print("first")
+    # print("check memory")
+    # print(agent.memory.load_memory_variables({}))
     # result = agent.gernerate_test_cases("登录注册功能")
     # print(result)
     # print("update")
-    # result2 = agent.gernerate_test_cases('增加安全相关的用例')
+    # result2 = agent.rag_test_cases('增加安全相关的用例')
     # print(result2)
     # print("check memory")
     # print(agent.memory.load_memory_variables({}))
